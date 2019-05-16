@@ -13,16 +13,5 @@
         echo json_encode($out);
         $result->free();
     }
-
-    /*$result = mysqli_query($conn, $query);
-
-    $out = array(); 
-    while($row = $query->fetch_assoc())
-    {
-        $out[] = $row;
-    }
-    echo json_encode($out);
-
-    # close connection*/
     $conn->close();    
 ?>

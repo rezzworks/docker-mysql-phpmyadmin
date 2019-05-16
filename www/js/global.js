@@ -1,8 +1,4 @@
-$('#checkSubmit').on('click', function()
-{
-    var name = $('#checkName').val();
-    console.log('name is ' + name);
-});
+displayRecords();
 
 function displayRecords()
 {
@@ -21,16 +17,16 @@ function displayRecords()
                     {"data": ""},
                     {"data": "id"},
                     {"data": "name"}
-                ]/*,
+                ],
                 "iDisplayLength": 25,
                 "order": [[ 1, "desc" ]],
                 "paging": true,
                 "scrollY": 550,
-                "scrollX": true,
+                /*"scrollX": true,*/
                 "bDestroy": true,
                 "stateSave": true,
                 "autoWidth": true,
-                "deferRender": true*/
+                "deferRender": true
             });
         },
         error: function(jqHHR, textStatus, errorThrown)
@@ -44,4 +40,17 @@ function displayRecords()
     });
 }
 
-displayRecords();
+$('#addNew').on('click', function()
+{
+    $('#addNewModal').modal('show');
+});
+
+$('#addNewSubmit').on('click', function()
+{
+    var addName = $('#addName').val();
+
+    $.post('process/editUser.php', {addName:addName}, function(data)
+    {
+        console.log(data);
+    });
+});
