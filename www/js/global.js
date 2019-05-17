@@ -14,7 +14,13 @@ function displayRecords()
             var table = $('#example1').DataTable({
                 "data": jsonObject,
                 "columns": [
-                    {"data": ""},
+                    {
+                        "data": "",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol)
+                        {
+                            $(nTd).html("<a href='#' id='editLink' data-uid='"+oData.id+"' data-name='"+oData.name+"'><i class='fas fa-edit'></i></a>");
+                        }
+                    },
                     {"data": "id"},
                     {"data": "name"}
                 ],
@@ -53,4 +59,44 @@ $('#addNewSubmit').on('click', function()
     {
         console.log(data);
     });
+});
+
+$('#example1').on('click', 'tr > td > a#editLink', function(e)
+{
+    e.preventDefault();
+    var $dataTable = $('#example1').DataTable();
+    var tr = $(this).closest('tr');
+    var data = $dataTable.rows().data();
+    var rowData = data[tr.index()];
+
+    $('#editFNameError').hide();
+
+    var editUID = rowData.id;
+    var editName = rowData.name;
+
+    $('#editUID').val(editUID);
+    $('#editFirstName').val(editName);
+
+    $('#editModal').modal('show');
+});
+
+$('#editUserSubmit').on('click', function()
+{
+    var editCriteria = {
+        editUID: $('#editUID').val(),
+        editFirstName: $('#editFirstName').val()
+    }
+
+    if(editCriteria.editFirstName == "")
+    {
+        $('#editFNameError').show();
+        return false;
+    }
+    else
+    {
+        $.post('process/editUser.php', {editCriteria:editCriteria}, function(data)
+        {
+           console.log(data); 
+        });
+    }
 });
