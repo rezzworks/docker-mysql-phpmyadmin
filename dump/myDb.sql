@@ -12,11 +12,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `Person` (
   `id` int(11) NOT NULL,
-  `name` varchar(20) NOT NULL
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-INSERT INTO `Person` (`id`, `name`) VALUES
+INSERT INTO `Person` (`id`, `firstName`) VALUES
 (1, 'William'),
 (2, 'Marc'),
 (3, 'John');

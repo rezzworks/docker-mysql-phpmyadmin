@@ -1,15 +1,19 @@
 <?php
     include("../include/database.php");
 
-    if(isset($_POST['addName']))
+    if(isset($_POST['addcriteria']))
     {
-        $addName = $_POST['addName'];
+        $value = $_POST['addcriteria'];
+        $addFirstName = $value['addFirstName'];
+        $addLastName = $value['addLastName'];
 
-        $select = "SELECT max(id) FROM Person";
+        $select = "SELECT max(id) + 1 AS `NEW_ID` FROM Person";
+        $result = $conn->query($select);
 
-        
+        $row = $result->fetch_assoc();
+        $newid = $row["NEW_ID"];
 
-        $insert = "INSERT INTO Person (id, `name`) VALUES ('4', '$addName')";
+        $insert = "INSERT INTO Person (id, `firstName`, `lastName`) VALUES ('$newid', '$addFirstName', '$addLastName')";
 
         if($conn->query($insert) === TRUE)
         {
@@ -29,8 +33,9 @@
 
         $editUID = $value['editUID'];
         $editFirstName = $value['editFirstName'];
+        $editLastName = $value['editLastName'];
 
-        $update = "UPDATE Person SET `name` = '$editFirstName' WHERE id = '$editUID'";
+        $update = "UPDATE Person SET `firstName` = '$editFirstName', `lastName` = '$editLastName' WHERE id = '$editUID'";
 
         if($conn->query($update) === TRUE)
         {
@@ -42,5 +47,23 @@
         }
 
         $conn->close();
+    }
+
+    if(isset($_POST['deleteCriteria']))
+    {
+        $value = $_POST['deleteCriteria'];
+
+        $delUID = $value['delUID'];
+
+        $delete = "DELETE FROM Person WHERE id = '$delUID'";
+
+        if($conn->query($delete) === TRUE)
+        {
+            echo "Success: Record deleted";
+        }
+        else
+        {
+            echo "Error " . $delete . "<br>" . $conn->error;
+        }
     }
 ?>

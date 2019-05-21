@@ -18,11 +18,12 @@ function displayRecords()
                         "data": "",
                         "fnCreatedCell": function (nTd, sData, oData, iRow, iCol)
                         {
-                            $(nTd).html("<a href='#' id='editLink' data-uid='"+oData.id+"' data-name='"+oData.name+"'><i class='fas fa-edit'></i></a>");
+                            $(nTd).html("<a href='#' id='editLink' data-uid='"+oData.id+"' data-name='"+oData.firstName+"'><i class='fas fa-edit'></i></a>  <a href='#' id='delLink' data-deluid='"+oData.id+"' data-delname='"+oData.firstName+"'><i class='fas fa-times'></i></a>");
                         }
                     },
                     {"data": "id"},
-                    {"data": "name"}
+                    {"data": "firstName"},
+                    {"data": "lastName"}
                 ],
                 "iDisplayLength": 25,
                 "order": [[ 1, "desc" ]],
@@ -53,11 +54,23 @@ $('#addNew').on('click', function()
 
 $('#addNewSubmit').on('click', function()
 {
+    var addcriteria = {
+        addFirstName: $('#addFirstName').val(),
+        addLastName: $('#addLastName').val()
+    }
     var addName = $('#addName').val();
 
-    $.post('process/editUser.php', {addName:addName}, function(data)
+    $.post('process/editUser.php', {addcriteria:addcriteria}, function(data)
     {
-        console.log(data);
+        if(data.indexOf('Error') > 1)
+        {
+            console.log('Error: ' + data);
+        }
+        else
+        {
+            $('#addNewModal').modal('hide');
+            displayRecords();
+        }
     });
 });
 
@@ -72,10 +85,12 @@ $('#example1').on('click', 'tr > td > a#editLink', function(e)
     $('#editFNameError').hide();
 
     var editUID = rowData.id;
-    var editName = rowData.name;
+    var editFirstName = rowData.firstName;
+    var editLastName = rowData.lastName;
 
     $('#editUID').val(editUID);
-    $('#editFirstName').val(editName);
+    $('#editFirstName').val(editFirstName);
+    $('#editLastName').val(editLastName);
 
     $('#editModal').modal('show');
 });
@@ -84,7 +99,8 @@ $('#editUserSubmit').on('click', function()
 {
     var editCriteria = {
         editUID: $('#editUID').val(),
-        editFirstName: $('#editFirstName').val()
+        editFirstName: $('#editFirstName').val(),
+        editLastName: $('#editLastName').val()
     }
 
     if(editCriteria.editFirstName == "")
@@ -96,7 +112,52 @@ $('#editUserSubmit').on('click', function()
     {
         $.post('process/editUser.php', {editCriteria:editCriteria}, function(data)
         {
-           console.log(data); 
+           if(data.indexOf('Error') > 1)
+           {
+               console.log('Error: ' + data);
+           }
+           else
+           {
+            $('#editModal').modal('hide');
+               displayRecords();
+           }
         });
     }
+});
+
+$('#example1').on('click', 'tr > td > a#delLink', function(e)
+{
+    e.preventDefault();
+    var $dataTable = $('#example1').DataTable();
+    var tr = $(this).closest('tr');
+    var data = $dataTable.rows().data();
+    var rowData = data[tr.index()];
+
+    var delUID = rowData.id;
+    var delName = rowData.name;
+
+    $('#delUID').val(delUID);
+    $('#delFirstName').val(delName);    
+    
+    $('#delModal').modal('show');
+});
+
+$('#delUserSubmit').on('click', function()
+{
+    var deleteCriteria = {
+        delUID: $('#delUID').val()
+    }
+
+    $.post('process/editUser.php', {deleteCriteria:deleteCriteria}, function(data)
+    {
+        if(data.indexOf('Error') > 1)
+        {
+            console.log('Error: ' + data);
+        }
+        else
+        {
+            $('#delModal').modal('hide');
+            displayRecords();
+        }
+    });
 });

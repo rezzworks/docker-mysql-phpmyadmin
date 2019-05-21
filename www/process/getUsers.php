@@ -1,7 +1,7 @@
 <?php
     include("../include/database.php");
 
-    $query = "SELECT '', id, `name` From Person";
+    $query = "SELECT '', id, `firstName`, `lastName` From Person";
 
     if($result = $conn->query($query))
     {
@@ -13,5 +13,6 @@
         echo json_encode($out);
         $result->free();
     }
+
     $conn->close();    
 ?>
